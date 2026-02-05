@@ -3,20 +3,21 @@
 	public enum MaxFlowSolverType
 	{
 		Dinic,
-		EdmondsKarp,
+		Stewart,
+		Libdy,
 	}
 
 	public class MaxFlowSolverFactory(FlowNetwork network)
 	{
 		public IMaxFlowSolver CreateSolver(MaxFlowSolverType solverType)
 		{
-			switch(solverType)
-			{  case MaxFlowSolverType.Dinic:
+			switch (solverType)
+			{
+				case MaxFlowSolverType.Dinic:
 					return new DinicSolver(network);
-				case MaxFlowSolverType.EdmondsKarp:
-					return new EdmondsKarpSolver(network);
+				default:
+					throw new NotImplementedException();
 			}
-			throw new NotImplementedException();
 		}
 	}
 }
