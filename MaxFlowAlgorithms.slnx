@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="MaxFlowAlgorithms.Test/MaxFlowAlgorithms.Test.csproj" />
+  <Project Path="MaxFlowAlgorithms/MaxFlowAlgorithms.csproj" />
+</Solution>
