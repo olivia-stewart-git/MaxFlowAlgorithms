@@ -4,7 +4,7 @@
 	{
 		public double CalculateMaxFlow(string source, string sink)
 		{
-
+			throw new NotImplementedException();
 		}
 	}
 }

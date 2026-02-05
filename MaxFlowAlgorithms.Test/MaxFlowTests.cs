@@ -1,7 +1,8 @@
 ﻿namespace MaxFlowAlgorithms.Test
 {
-	[TestFixture(nameof(MaxFlowSolverType))]
-	public class MaxFlowTests(MaxFlowSolverType maxFlowSolver)
+	[TestFixture(MaxFlowSolverType.Dinic)]
+	[TestFixture(MaxFlowSolverType.EdmondsKarp)]
+	public class MaxFlowTests(MaxFlowSolverType solverType)
 	{
 		[Test]
 		public void TestInvalidNodesArgumentException()
@@ -18,7 +19,7 @@
 		{
 			network = new FlowNetwork();
 			var factory = new MaxFlowSolverFactory(network);
-			solver = factory.CreateSolver(maxFlowSolver);
+			solver = factory.CreateSolver(solverType);
 		}
 	}
 }

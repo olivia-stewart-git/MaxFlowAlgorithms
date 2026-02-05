@@ -49,9 +49,13 @@
 
 		public Edge AddEdge(string fromId, string toId, int capacity)
 		{
-			if (string.IsNullOrWhiteSpace(fromId) || string.IsNullOrWhiteSpace(toId)) throw new InvalidOperationException("Edge doesnt exist");
+			if (string.IsNullOrWhiteSpace(fromId) || string.IsNullOrWhiteSpace(toId)) throw new InvalidOperationException("Invalid Id");
 			var from = AddNode(fromId);
 			var to = AddNode(toId);
+			if (from == null || to == null)
+			{
+				throw new InvalidOperationException("Cant find nodes");
+			}
 			return AddEdge(from, to, capacity);
 		}
 	}
