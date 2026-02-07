@@ -1,8 +1,7 @@
 ﻿namespace MaxFlowAlgorithms.Test
 {
 	[TestFixture(MaxFlowSolverType.Dinic)]
-	[TestFixture(MaxFlowSolverType.Stewart)]
-	[TestFixture(MaxFlowSolverType.Libdy)]
+	[TestFixture(MaxFlowSolverType.EdmondsKarp)]
 	public class MaxFlowTests(MaxFlowSolverType solverType)
 	{
 		FlowNetwork network;
