@@ -3,8 +3,7 @@
 	public enum MaxFlowSolverType
 	{
 		Dinic,
-		Stewart,
-		Libdy,
+		EdmondsKarp,
 	}
 
 	public class MaxFlowSolverFactory(FlowNetwork network)
@@ -15,6 +14,8 @@
 			{
 				case MaxFlowSolverType.Dinic:
 					return new DinicSolver(network);
+				case MaxFlowSolverType.EdmondsKarp:
+					return new EdmondsKarpSolver(network);
 				default:
 					throw new NotImplementedException();
 			}
