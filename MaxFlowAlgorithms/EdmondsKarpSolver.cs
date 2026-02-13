@@ -1,11 +1,12 @@
-ï»¿namespace MaxFlowAlgorithms
+namespace MaxFlowAlgorithms
 {
 	/// <summary>
-	/// Edmondsâ€“Karp algorithm (Fordâ€“Fulkerson using BFS).
+	/// Edmonds–Karp algorithm (Ford–Fulkerson using BFS).
 	/// Time complexity: O(V * E^2)
 	/// </summary>
 	public class EdmondsKarpSolver(FlowNetwork network) : IMaxFlowSolver
 	{
+		// Same residual edge idea as Dinic's - forward + reverse pair, linked by Rev index.
 		private sealed class ResidualEdge
 		{
 			public int To;
@@ -27,6 +28,7 @@
 			if (string.IsNullOrWhiteSpace(sink)) throw new ArgumentNullException(nameof(sink));
 			if (source == sink) return 0;
 
+			// Map string ids to ints for array-based adjacency
 			var nodes = network.Nodes.ToList();
 			var index = new Dictionary<string, int>();
 
@@ -43,6 +45,7 @@
 			for (int i = 0; i < graph.Length; i++)
 				graph[i] = new List<ResidualEdge>();
 
+			// Each edge becomes a forward/reverse pair in the residual graph
 			void AddEdge(int u, int v, int cap)
 			{
 				var fwd = new ResidualEdge(v, graph[v].Count, cap);
@@ -62,13 +65,18 @@
 				AddEdge(index[e.From.id], index[e.To.id], e.Capacity);
 			}
 
+			// parentV/parentE let us reconstruct the BFS path from sink back to source
 			var parentV = new int[nodes.Count];
 			var parentE = new int[nodes.Count];
 
 			long maxFlow = 0;
 
+			// BFS finds the shortest augmenting path each iteration.
+			// Using shortest paths is what makes this Edmonds-Karp rather than
+			// generic Ford-Fulkerson, and guarantees O(VE^2).
 			while (Bfs(graph, s, t, parentV, parentE))
 			{
+				// Walk the path backwards to find the bottleneck (min residual cap)
 				int bottleneck = int.MaxValue;
 
 				for (int v = t; v != s; v = parentV[v])
@@ -78,6 +86,7 @@
 					bottleneck = Math.Min(bottleneck, graph[pv][ei].Cap);
 				}
 
+				// Walk it again to actually push flow along the path
 				for (int v = t; v != s; v = parentV[v])
 				{
 					var pv = parentV[v];
@@ -94,6 +103,8 @@
 			return maxFlow;
 		}
 
+		// Standard BFS over residual edges with remaining capacity.
+		// Records parent info so the caller can trace the path back from t to s.
 		private static bool Bfs(
 			List<ResidualEdge>[] graph,
 			int s,
@@ -106,7 +117,7 @@
 
 			var queue = new Queue<int>();
 			queue.Enqueue(s);
-			parentV[s] = s;
+			parentV[s] = s; // mark source as visited
 
 			while (queue.Count > 0)
 			{
@@ -120,14 +131,14 @@
 						parentE[e.To] = i;
 
 						if (e.To == t)
-							return true;
+							return true; // found sink, early exit
 
 						queue.Enqueue(e.To);
 					}
 				}
 			}
 
-			return false;
+			return false; // sink unreachable, no more augmenting paths
 		}
 	}
 }
